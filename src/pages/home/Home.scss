@@ -1,0 +1,30 @@
+.home {
+  display: flex;
+
+  &__container {
+    flex: 6;
+
+    .widgets,
+    .charts {
+      display: flex;
+      padding: 2rem;
+      gap: 2rem;
+    }
+
+    .charts {
+      padding: 0.5rem 2rem;
+    }
+
+    .listContainer {
+      margin: 2rem;
+      padding: 2rem;
+      box-shadow: 2px 4px 10px 1px rgba(201, 201, 201, 0.47);
+
+      .listTitle {
+        font-size: 1.6rem;
+        font-weight: 500;
+        margin-bottom: 1.5rem;
+      }
+    }
+  }
+}
