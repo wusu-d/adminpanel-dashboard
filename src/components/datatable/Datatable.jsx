@@ -1,22 +1,73 @@
-import React from "react";
-import { DataGrid } from "@mui/x-data-grid";
-import { userColumns, userRows } from "../../datatableSource";
-import "./Datatable.scss";
-import { Link } from "react-router-dom";
+import React, { useEffect, useState } from 'react';
+import { DataGrid } from '@mui/x-data-grid';
+import { userColumns } from '../../datatableSource';
+import { collection, onSnapshot, doc, deleteDoc } from 'firebase/firestore';
+import { db } from '../../firebase';
+import { Link } from 'react-router-dom';
+import './Datatable.scss';
 
 const Datatable = () => {
+  const [data, setData] = useState([]);
+
+  useEffect(() => {
+    // 1) loading data one time
+    // const fetchData = async () => {
+    //   let list = [];
+    //   try {
+    //     const querySnapshot = await getDocs(collection(db, 'users'));
+    //     querySnapshot.forEach((doc) => {
+    //       list.push({ id: doc.id, ...doc.data() });
+    //     });
+    //     setData(list);
+    //   } catch (error) {}
+    // };
+
+    // fetchData();
+
+    // LISTEN (REALTIME)
+    const unsub = onSnapshot(
+      collection(db, 'users'),
+      (snapShot) => {
+        let list = [];
+        snapShot.docs.forEach((doc) => {
+          list.push({ id: doc.id, ...doc.data() });
+        });
+        setData(list);
+      },
+      (error) => {
+        console.log(error);
+      }
+    );
+
+    return () => {
+      unsub();
+    };
+  }, []);
+
+  const handleDelete = async (id) => {
+    try {
+      await deleteDoc(doc(db, 'users', id));
+      setData(data.filter((item) => item.id !== id));
+    } catch (error) {}
+  };
+
   const actionColumn = [
     {
-      field: "action",
-      headerName: "Action",
+      field: 'action',
+      headerName: 'Action',
       width: 200,
-      renderCell: () => {
+      renderCell: (params) => {
         return (
           <div className="cellAction">
-            <Link to="/users/test" style={{ textDecoration: "none" }}>
+            <Link to="/users/test" style={{ textDecoration: 'none' }}>
               <div className="viewButton">View</div>
             </Link>
-            <div className="deleteButton">Delete</div>
+            <div
+              className="deleteButton"
+              onClick={() => handleDelete(params.row.id)}
+            >
+              Delete
+            </div>
           </div>
         );
       },
@@ -33,7 +84,7 @@ const Datatable = () => {
       </div>
       <DataGrid
         className="datagrid"
-        rows={userRows}
+        rows={data}
         columns={userColumns.concat(actionColumn)}
         pageSize={9}
         rowsPerPageOptions={[9]}

@@ -1,0 +1,39 @@
+.login {
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    input {
+      width: 20rem;
+      height: 3rem;
+      margin: 1rem;
+    }
+
+    button {
+      width: 20rem;
+      height: 3rem;
+      border: none;
+      background-color: purple;
+      color: #fff;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    span {
+      font-size: 1.2rem;
+      margin-top: 1rem;
+      color: red;
+    }
+
+    .test {
+      font-size: 1.3rem;
+      font-weight: 600;
+    }
+  }
+}
